@@ -135,7 +135,7 @@ class WooThemes_Updater_Update_Checker {
 		$transient = get_site_transient( 'update_plugins' );
 
 		// Check if this plugins API is about this plugin
-		if( isset( $args->slug ) && ( $args->slug != $this->file ) ) {
+		if( ! isset( $args->slug ) || ( $args->slug != $this->file ) ) {
 			return $false;
 		}
 
@@ -183,7 +183,7 @@ class WooThemes_Updater_Update_Checker {
 			'redirection' => 5,
 			'httpversion' => '1.0',
 			'blocking' => true,
-			'headers' => array( 'user-agent' => 'WooThemesUpdater/1.2.0' ),
+			'headers' => array( 'user-agent' => 'WooThemesUpdater/1.2.2' ),
 			'body' => $args,
 			'cookies' => array(),
 			'sslverify' => false

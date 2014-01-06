@@ -142,6 +142,7 @@ class WooThemes_Updater_API {
 		);
 
 		if( is_wp_error( $response ) ) {
+			$data = new StdClass;
 			$data->error = __( 'WooThemes Request Error', 'woothemes-updater' );
 		} else {
 			$data = $response['body'];
