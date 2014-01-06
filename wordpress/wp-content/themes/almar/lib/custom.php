@@ -4,6 +4,10 @@
  */
 
 
+// Woocommerce support
+add_theme_support('woocommerce');
+
+
 // Custom font
 add_action('init', 'almar_register_styles');
 function almar_register_styles() {
