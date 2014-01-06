@@ -10,7 +10,9 @@
 
 // colors
 @color-almar-black: #000;
+@color-almar-offblack: lighten(@color-almar-black, 10);
 @color-almar-white: #fff;
+@color-almar-offwhite: darken(@color-almar-white, 5);
 @color-almar-red: #900;
 
 // fonts
@@ -21,11 +23,18 @@
    ========================================================================== */
 
 // colors
+@body-bg: @color-almar-black;
+@text-color: @color-almar-white;
+@link-color: @color-almar-white;
+@link-hover-color: @color-almar-red;
 
 // fonts
 
 // navbar
+@navbar-border-radius: 0;
 
+// wells
+@well-bg: @color-almar-offblack;
 
 /* ==========================================================================
    Base
@@ -38,6 +47,27 @@ body { }
 /* ==========================================================================
    Header
    ========================================================================== */
+
+.stripe {
+   background: @color-almar-black;
+   color: @color-almar-white;
+   font-size: 0.8em;
+   line-height: 2;
+   padding: 1em 0 0;
+   text-transform: uppercase;
+   &, a {
+      color: @color-almar-offwhite;
+   }
+   a:hover, a:active, a:focus {
+      color: @color-almar-white;
+      text-decoration: none;
+   }
+}
+.bar-nav-wrap {
+}
+.bar-nav {
+
+}
 
 .banner { }
 
@@ -105,6 +135,12 @@ figure.alignnone { margin-left: 0; margin-right: 0; }
 /* ==========================================================================
    Media Queries
    ========================================================================== */
+
+@media (max-width: @screen-xs-max) {
+   .stripe {
+      padding: 1em 0;
+   }
+}
 
 @media (min-width: @screen-sm-min) { }
 
