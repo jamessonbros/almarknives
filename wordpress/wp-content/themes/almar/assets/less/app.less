@@ -14,8 +14,12 @@
 @color-almar-white: #fff;
 @color-almar-offwhite: darken(@color-almar-white, 10);
 @color-almar-red: #ae212b;
+@color-almar-light-green: #93a182;
+@color-almar-beige: #d3bfab;
+@color-almar-light-beige: lighten(@color-almar-beige, 20);
 
 // fonts
+@font-family-almar-special: "AmericanCaptain", sans-serif;
 
 
 /* ==========================================================================
@@ -29,9 +33,15 @@
 @link-hover-color: @color-almar-red;
 
 // fonts
+@headings-font-family: @font-family-almar-special;
 
 // navbar
 @navbar-border-radius: 0;
+@navbar-height: 75px;
+// @navbar-padding-vertical: 20px;
+@navbar-inverse-bg: @color-almar-black;
+@navbar-inverse-link-color: @color-almar-white;
+@navbar-inverse-link-hover-color: @color-almar-light-green;
 
 // wells
 @well-bg: @color-almar-offblack;
@@ -42,12 +52,15 @@
 
 body { }
 
-
+h1, h2, h3, h4, h5, h6 {
+   text-transform: uppercase;
+}
 
 /* ==========================================================================
    Header
    ========================================================================== */
 
+// stripe
 .stripe {
    background: @color-almar-black;
    color: @color-almar-white;
@@ -56,20 +69,28 @@ body { }
    padding: 1em 0 0;
    text-transform: uppercase;
    &, a {
-      color: @color-almar-offwhite;
+      color: @color-almar-light-green;
    }
-   a:hover, a:active, a:focus {
+   a:hover, a:active, a:focus,
+   li.active a {
       color: @color-almar-white;
       text-decoration: none;
    }
 }
-.bar-nav-wrap {
-}
-.bar-nav {
 
-}
 
-.banner { }
+// navbar
+.navbar-inverse {
+   background-image: url(../img/navbar.png);
+   text-transform: uppercase;
+   .navbar-nav {
+      margin-top: 25px;
+      & > li > a {
+         font-family: @font-family-almar-special;
+         font-size: 2em;
+      }
+   }
+}
 
 
 

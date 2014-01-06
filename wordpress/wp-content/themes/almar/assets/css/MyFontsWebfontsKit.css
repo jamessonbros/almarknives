@@ -1,0 +1,56 @@
+/* @license
+ * MyFonts Webfont Build ID 2683826, 2013-11-07T17:03:43-0500
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: American Captain Patrius 02 by The Fontry
+ * URL: http://www.myfonts.com/fonts/fontry/american-captain/patrius-02/
+ * 
+ * Webfont: American Captain 01 by The Fontry
+ * URL: http://www.myfonts.com/fonts/fontry/american-captain/01/
+ * 
+ * Webfont: American Captain Eternal by The Fontry
+ * URL: http://www.myfonts.com/fonts/fontry/american-captain/eternal/
+ * 
+ * Webfont: American Captain Patrius 01 by The Fontry
+ * URL: http://www.myfonts.com/fonts/fontry/american-captain/patrius-01/
+ * 
+ * Webfont: American Captain by The Fontry
+ * URL: http://www.myfonts.com/fonts/fontry/american-captain/regular/
+ * 
+ * Webfont: American Captain Patrius by The Fontry
+ * URL: http://www.myfonts.com/fonts/fontry/american-captain/patrius/
+ * 
+ * 
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2683826
+ * Licensed pageviews: 20,000
+ * Webfonts copyright: Copyright (c) 2011 by The Fontry. All rights reserved.
+ * 
+ * © 2013 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/28f3b2");
+
+  
+@font-face {font-family: 'AmericanCaptainPatrius02';src: url('../fonts/28F3B2_0_0.eot');src: url('../fonts/28F3B2_0_0.eot?#iefix') format('embedded-opentype'),url('../fonts/28F3B2_0_0.woff') format('woff'),url('../fonts/28F3B2_0_0.ttf') format('truetype');}
+ 
+  
+@font-face {font-family: 'AmericanCaptain01';src: url('../fonts/28F3B2_1_0.eot');src: url('../fonts/28F3B2_1_0.eot?#iefix') format('embedded-opentype'),url('../fonts/28F3B2_1_0.woff') format('woff'),url('../fonts/28F3B2_1_0.ttf') format('truetype');}
+ 
+  
+@font-face {font-family: 'AmericanCaptainEternal';src: url('../fonts/28F3B2_2_0.eot');src: url('../fonts/28F3B2_2_0.eot?#iefix') format('embedded-opentype'),url('../fonts/28F3B2_2_0.woff') format('woff'),url('../fonts/28F3B2_2_0.ttf') format('truetype');}
+ 
+  
+@font-face {font-family: 'AmericanCaptainPatrius01';src: url('../fonts/28F3B2_3_0.eot');src: url('../fonts/28F3B2_3_0.eot?#iefix') format('embedded-opentype'),url('../fonts/28F3B2_3_0.woff') format('woff'),url('../fonts/28F3B2_3_0.ttf') format('truetype');}
+ 
+  
+@font-face {font-family: 'AmericanCaptain';src: url('../fonts/28F3B2_4_0.eot');src: url('../fonts/28F3B2_4_0.eot?#iefix') format('embedded-opentype'),url('../fonts/28F3B2_4_0.woff') format('woff'),url('../fonts/28F3B2_4_0.ttf') format('truetype');}
+ 
+  
+@font-face {font-family: 'AmericanCaptainPatrius';src: url('../fonts/28F3B2_5_0.eot');src: url('../fonts/28F3B2_5_0.eot?#iefix') format('embedded-opentype'),url('../fonts/28F3B2_5_0.woff') format('woff'),url('../fonts/28F3B2_5_0.ttf') format('truetype');}

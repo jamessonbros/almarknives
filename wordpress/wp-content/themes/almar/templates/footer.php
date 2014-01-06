@@ -15,7 +15,7 @@
         endif;
       ?>
       </div>
-      <p>&copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?></p>
+      <p>&copy; <?php echo date('Y'); ?> <a href="<?php echo home_url() ?>"><?php bloginfo('name'); ?></a></p>
     </div>
   </div>
 </footer>
