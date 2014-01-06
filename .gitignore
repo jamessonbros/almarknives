@@ -1,0 +1,9 @@
+.DS_Store
+node_modules
+
+wp-config.php
+/wp-cli*
+
+wordpress/wp-content/uploads
+wordpress/wp-content/backup*
+wordpress/wp-content/upgrade
