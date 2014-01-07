@@ -29,3 +29,19 @@ add_action('wp_enqueue_scripts', 'almar_load_styles');
 function almar_load_styles() {
   wp_enqueue_style('fontkit');
 }
+
+
+// Jumbotrons
+add_action('almar_jumbotron', 'almar_do_jumbotron', 10);
+function almar_do_jumbotron() {
+  // front page jumbotron
+  if (is_front_page()) {
+    get_template_part('templates/jumbotron-front-page');
+    return;
+  }
+
+  // other jumbotrons
+  global $post;
+  $slug = $post->post_name;
+  get_template_part('templates/jumbotron-'.$slug);
+}

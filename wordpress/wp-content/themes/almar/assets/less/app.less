@@ -33,6 +33,8 @@
 @link-color: @color-almar-red;
 @link-hover-color: @color-almar-red;
 
+@brand-primary: @color-almar-red;
+
 // other type
 @blockquote-border-color: @color-almar-offblack;
 @page-header-border-color: @color-almar-offblack;
@@ -42,6 +44,7 @@
 @headings-font-family: @font-family-almar-special;
 
 // navbar
+@navbar-margin-bottom: 0;
 @navbar-border-radius: 0;
 @navbar-height: 75px;
 // @navbar-padding-vertical: 20px;
@@ -58,7 +61,7 @@
 @dropdown-link-active-bg: @color-almar-offblack;
 
 // wells
-@well-bg: @color-almar-offblack;
+@well-bg: darken(@color-almar-beige, 10);
 
 /* ==========================================================================
    Base
@@ -112,6 +115,9 @@ h1, h2, h3, h4, h5, h6 {
       &:hover, &:active, &:focus {
          color: @color-almar-white;
          text-decoration: none;
+      }
+      &.btn {
+         color: @color-almar-white;
       }
    }
 }
