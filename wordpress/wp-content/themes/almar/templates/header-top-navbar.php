@@ -1,8 +1,8 @@
-<div class="stripe">
+<div class="stripe l-inverse">
   <div class="container">
     <div class="row">
       <div class="col-xs-6 col-sm-8 col-md-8">
-        <a class="xs-link visible-xs" href="#contentinfo">More info &raquo;</a>
+        <a class="xs-link visible-xs" href="#fmenu">More info &raquo;</a>
         <nav class="bar-nav-wrap hidden-xs">
         <?php
           if (has_nav_menu('primary_navigation')) :

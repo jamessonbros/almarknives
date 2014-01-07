@@ -33,6 +33,11 @@
 @link-color: @color-almar-red;
 @link-hover-color: @color-almar-red;
 
+// other type
+@blockquote-border-color: @color-almar-offblack;
+@page-header-border-color: @color-almar-offblack;
+@text-muted: @gray;
+
 // fonts
 @headings-font-family: @font-family-almar-special;
 
@@ -43,6 +48,14 @@
 @navbar-inverse-bg: @color-almar-black;
 @navbar-inverse-link-color: @color-almar-white;
 @navbar-inverse-link-hover-color: @color-almar-light-green;
+
+// dropdowns
+@dropdown-bg: @color-almar-beige;
+@dropdown-link-color: @color-almar-black;
+@dropdown-link-hover-color: @color-almar-white;
+@dropdown-link-hover-bg: @color-almar-offblack;
+@dropdown-link-active-color: @color-almar-white;
+@dropdown-link-active-bg: @color-almar-offblack;
 
 // wells
 @well-bg: @color-almar-offblack;
@@ -63,19 +76,12 @@ h1, h2, h3, h4, h5, h6 {
 
 // stripe
 .stripe {
-   background: @color-almar-black;
-   color: @color-almar-white;
    font-size: 0.8em;
    line-height: 2;
    padding: 1em 0 0;
    text-transform: uppercase;
-   &, a {
-      color: @color-almar-light-green;
-   }
-   a:hover, a:active, a:focus,
    li.active a {
       color: @color-almar-white;
-      text-decoration: none;
    }
 }
 
@@ -93,6 +99,30 @@ h1, h2, h3, h4, h5, h6 {
    }
 }
 
+/* ==========================================================================
+   Inverse layout scheme
+   ========================================================================== */
+
+.l-inverse {
+   background: @color-almar-black;
+   color: @color-almar-white;
+   a {
+      color: @color-almar-light-green;
+      text-decoration: none;
+      &:hover, &:active, &:focus {
+         color: @color-almar-white;
+         text-decoration: none;
+      }
+   }
+}
+
+/* ==========================================================================
+   Jumbotron/Heros
+   ========================================================================== */
+
+.jumbotron {
+   background: @color-almar-black url(../img/bg.jpg) no-repeat center top;
+}
 
 
 /* ==========================================================================

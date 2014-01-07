@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-lg-12">
       <?php dynamic_sidebar('sidebar-footer'); ?>
-      <div class="footer-nav-wrap">
+      <div class="footer-nav-wrap" id="fmenu">
       <?php 
         if (has_nav_menu('footer_navigation')):
           wp_nav_menu(array(
