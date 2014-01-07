@@ -1,1 +1,1 @@
-Product archive view
+<?php woocommerce_content() ?>

@@ -1,1 +1,1 @@
-Single product view
+<?php woocommerce_content() ?>
