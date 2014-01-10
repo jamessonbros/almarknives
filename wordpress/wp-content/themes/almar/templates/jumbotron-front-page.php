@@ -22,21 +22,21 @@
 		    </div>
 				<div class="item">
 			    <h1>SERE 2000</h1>
-			    <p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/Sere2000.png" alt="" class="img-responsive"></p>
 			    <p>Better than the original, the SERE 2000 sets a new standard for tactical folding knives.</p>
 			    <p><a href="#" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
+			    <p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/Sere2000.png" alt="" class="img-responsive"></p>
 		    </div>
 		    <div class="item">
 		    	<h1>UltraChef</h1>
-		    	<p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultrachef.png" alt="" class="img-responsive"></p>
-		    	<p>Lorem ipsum sin dolor sit amet, consequitar in elabit sin dolor amet.</p>
+		    	<p>Laminated VG-10 blades and ergonomic stainless handles make Al Mar Stainless Ultra Chef knives perfect for any kitchen.</p>
 		    	<p><a href="#" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
+		    	<p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultrachef.png" alt="" class="img-responsive"></p>
 		    </div>
 		    <div class="item">
 		    	<h1>UltraLights</h1>
+		    	<p>Maximum blade to handle ratio, minimum weight - the perfect Every Day Carry knife.</p>
+		    	<p><a href="/product/ultralight/" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
 		    	<p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultralights.png" alt="" class="img-responsive"></p>
-		    	<p>Lorem ipsum sin dolor sit amet, consequitar in elabit sin dolor amet.</p>
-		    	<p><a href="#" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
 		    </div>
 		   </div>
 
