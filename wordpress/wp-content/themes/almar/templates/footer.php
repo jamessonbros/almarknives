@@ -1,7 +1,7 @@
 <div class="red">
   <div class="container">
     <div class="row text-center">
-      <h3>At Al Mar Knives, A Warrior’s Edge ™ means Factory Perfection ™.</h3>
+      <h3>At Al Mar Knives, A Warrior's Edge &trade; means Factory Perfection &trade;.</h3>
     </div>
   </div>
 </div>
