@@ -1,5 +1,5 @@
 
-<div class="l-inverse carousel-container">
+<div class="jumbotron jumbotron-front-page l-inverse carousel-container">
   <div class="container">
 
 		<div id="carousel" class="carousel slide" data-ride="carousel">
