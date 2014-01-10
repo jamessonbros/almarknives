@@ -1,3 +1,11 @@
+<div class="red">
+  <div class="container">
+    <div class="row text-center">
+      <h3>At Al Mar Knives, A Warrior’s Edge ™ means Factory Perfection ™.</h3>
+    </div>
+  </div>
+</div>
+
 <div class="l-inverse">
   <footer class="content-info container" role="contentinfo">
     <div class="row">
@@ -19,6 +27,7 @@
         ?>
         </div>
         <p>&copy; <?php echo date('Y'); ?> <a href="<?php echo home_url() ?>"><?php bloginfo('name'); ?></a></p>
+        <p>Site by <a href="http://groovywebdesign.com/"><img src="/media/groovywebdesign.png" width="40"></a></p>
       </div>
     </div>
   </footer>
