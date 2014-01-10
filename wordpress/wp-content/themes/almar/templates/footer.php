@@ -27,7 +27,7 @@
         ?>
         </div>
         <p>&copy; <?php echo date('Y'); ?> <a href="<?php echo home_url() ?>"><?php bloginfo('name'); ?></a></p>
-        <p>Site by <a href="http://groovywebdesign.com/"><img src="/media/groovywebdesign.png" width="40"></a></p>
+        <p>Site by <a href="http://groovywebdesign.com/"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/teethw.png" width="40"></a></p>
       </div>
     </div>
   </footer>
