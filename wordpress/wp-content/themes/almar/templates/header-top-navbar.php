@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<header class="banner navbar navbar-inverse navbar-static-top" role="banner">
+<nav class="banner navbar navbar-inverse navbar-static-top" role="banner">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -37,15 +37,20 @@
       <a class="navbar-brand" href="<?php echo home_url(); ?>/"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/logo.png" alt="<?php bloginfo('name') ?>" /></a>
     </div>
 
-    <nav class="collapse navbar-collapse" role="navigation">
+    <div class="collapse navbar-collapse" role="navigation">
       <?php
         if (has_nav_menu('primary_navigation')) :
           wp_nav_menu(array(
             'theme_location' => 'primary_navigation',
-            'menu_class' => 'nav navbar-nav'
+            'menu_class' => 'nav navbar-nav navbar-left'
           ));
         endif;
       ?>
-    </nav>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <?php echo almar_header_nav_cart_link() ?>
+        </li>
+      </ul>
+    </div>
   </div>
-</header>
+</nav>
