@@ -265,6 +265,7 @@ figure.alignnone { margin-left: 0; margin-right: 0; }
    Woocommerce static overrides
    ========================================================================== */
 
+// single product
 .price {
    .amount {
       color: @color-almar-red;
@@ -275,4 +276,13 @@ figure.alignnone { margin-left: 0; margin-right: 0; }
 }
 .label {
    color: @color-almar-offblack;
+}
+
+// tabs
+.woocommerce div.product .woocommerce-tabs ul.tabs, .woocommerce-page div.product .woocommerce-tabs ul.tabs, .woocommerce #content div.product .woocommerce-tabs ul.tabs, .woocommerce-page #content div.product .woocommerce-tabs ul.tabs {
+   margin-bottom: 0;
+}
+.woocommerce div.product .woocommerce-tabs .panel, .woocommerce #content div.product .woocommerce-tabs .panel, .woocommerce-page div.product .woocommerce-tabs .panel, .woocommerce-page #content div.product .woocommerce-tabs .panel {
+   margin-top: 0;
+   padding: 0 1em;
 }
