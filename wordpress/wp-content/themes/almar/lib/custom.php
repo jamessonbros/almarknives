@@ -8,6 +8,27 @@
 add_theme_support('woocommerce');
 
 
+// Woocommerce base template
+// add_filter('roots_wrap_base', 'almar_wrap_woocommerce_base');
+function almar_wrap_woocommerce_base($templates) {
+  if (is_woocommerce()) {
+    array_unshift($templates, 'base-shop.php');
+  }
+
+  return $templates;
+}
+
+
+// Cleanup woocommerce actions
+// remove_all_actions('woocommerce_before_single_product');
+// remove_all_actions('woocommerce_before_single_product_summary');
+// remove_all_actions('woocommerce_single_product_summary');
+// remove_all_actions('woocommerce_after_single_product_summary');
+// remove_all_actions('woocommerce_after_single_product');
+// add in main product image
+
+
+
 // Favicon
 add_action('wp_head', 'almar_load_favicon', 9999);
 function almar_load_favicon() {
@@ -44,6 +65,14 @@ function almar_do_jumbotron() {
   global $post;
   $slug = $post->post_name;
   get_template_part('templates/jumbotron-'.$slug);
+}
+
+// Product single jumbotron
+// add_action('almar_product_single_jumbotron', 'almar_do_product_single_jumbotron');
+function almar_do_product_single_jumbotron() {
+  if (!is_singular('product')) return;
+  if (!has_post_thumbnail()) return;
+  get_template_part('templates/jumbotron-product-single');
 }
 
 

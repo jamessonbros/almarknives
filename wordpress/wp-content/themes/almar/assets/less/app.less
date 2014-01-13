@@ -65,6 +65,7 @@
 // wells
 @well-bg: darken(@color-almar-beige, 10);
 
+
 /* ==========================================================================
    Base
    ========================================================================== */
@@ -257,3 +258,21 @@ figure.alignnone { margin-left: 0; margin-right: 0; }
 @media (min-width: @screen-md-min) { }
 
 @media (min-width: @screen-lg-min) { }
+
+
+
+/* ==========================================================================
+   Woocommerce static overrides
+   ========================================================================== */
+
+.price {
+   .amount {
+      color: @color-almar-red;
+      font-size: 2em;
+      font-weight: bold;
+      font-family: @font-family-almar-special;
+   }
+}
+.label {
+   color: @color-almar-offblack;
+}

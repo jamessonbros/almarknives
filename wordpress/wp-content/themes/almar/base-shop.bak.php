@@ -8,9 +8,9 @@
     get_template_part('templates/header-top-navbar');
   ?>
 
-  <?php do_action('almar_jumbotron') ?>
+  <?php do_action('almar_product_single_jumbotron') ?>
 
-  <div class="wrap container" role="document">
+  <div class="wrap wrap-shop" role="document">
     <div class="content row">
       <main class="main <?php echo roots_main_class(); ?>" role="main">
         <?php include roots_template_path(); ?>

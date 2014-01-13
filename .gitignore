@@ -7,3 +7,6 @@ wp-config.php
 wordpress/wp-content/uploads
 wordpress/wp-content/backup*
 wordpress/wp-content/upgrade
+
+woocommerce-base.less
+woocommerce.css
