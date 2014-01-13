@@ -40,6 +40,7 @@
 		    </div>
 		   </div>
 
+		   <?php /* 
 		  <!-- Controls -->
 		  <a class="left carousel-control" href="#carousel" data-slide="prev">
 		    <span class="glyphicon glyphicon-chevron-left"></span>
@@ -47,6 +48,7 @@
 		  <a class="right carousel-control" href="#carousel" data-slide="next">
 		    <span class="glyphicon glyphicon-chevron-right"></span>
 		  </a>
+		  */ ?>
 
 		</div>
   </div>
