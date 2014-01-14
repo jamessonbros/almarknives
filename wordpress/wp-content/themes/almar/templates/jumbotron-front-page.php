@@ -1,4 +1,3 @@
-
 <div class="jumbotron jumbotron-front-page l-inverse carousel-container">
   <div class="container">
 
@@ -17,26 +16,26 @@
 		    <div class="item active">
 			    <h1>Eagle Classic</h1>
 			    <p>Three versions of the 4" Eagle to fit any occasion, requirement, or pocket.</p>
-			    <p><a href="#" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
-			    <p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/eagle-classic.png" alt="" class="img-responsive"></p>
+			    <p><a href="/product/eagle-classic/" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
+			    <p><a href="/product/eagle-classic/"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/eagle-classic.png" alt="" class="img-responsive"></a></p>
 		    </div>
 				<div class="item">
 			    <h1>SERE 2000</h1>
 			    <p>Better than the original, the SERE 2000 sets a new standard for tactical folding knives.</p>
-			    <p><a href="#" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
-			    <p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/Sere2000.png" alt="" class="img-responsive"></p>
+			    <p><a href="/product/sere-2000/" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
+			    <p><a href="/product/sere-2000/"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/Sere2000.png" alt="" class="img-responsive"></a></p>
 		    </div>
 		    <div class="item">
 		    	<h1>UltraChef</h1>
 		    	<p>Laminated VG-10 blades and ergonomic stainless handles make Al Mar Stainless Ultra Chef knives perfect for any kitchen.</p>
 		    	<p><a href="#" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
-		    	<p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultrachef.png" alt="" class="img-responsive"></p>
+		    	<p><a href="#"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultrachef.png" alt="" class="img-responsive"></a></p>
 		    </div>
 		    <div class="item">
 		    	<h1>UltraLights</h1>
 		    	<p>Maximum blade to handle ratio, minimum weight - the perfect Every Day Carry knife.</p>
 		    	<p><a href="/product/ultralight/" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
-		    	<p><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultralights.png" alt="" class="img-responsive"></p>
+		    	<p><a href="/product/ultralight/"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultralights.png" alt="" class="img-responsive"></a></p>
 		    </div>
 		   </div>
 
