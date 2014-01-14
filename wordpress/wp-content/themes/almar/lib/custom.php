@@ -100,3 +100,10 @@ function almar_woocommerce_header_add_to_cart_fragment($fragments) {
   $fragments['a.nav-cart-link'] = $output;
   return $fragments;
 }
+
+
+// Uservoice widget code
+add_action('wp_footer', 'almar_uservoice_widget', 1000);
+function almar_uservoice_widget() {
+  get_template_part('templates/uservoice-widget');
+}
