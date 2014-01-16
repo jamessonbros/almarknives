@@ -8,6 +8,6 @@ wordpress/wp-content/uploads
 wordpress/wp-content/backup*
 wordpress/wp-content/upgrade
 
-woocommerce-base.less
-woocommerce.css
-woocommerce.less
+#woocommerce-base.less
+#woocommerce.css
+#woocommerce.less
