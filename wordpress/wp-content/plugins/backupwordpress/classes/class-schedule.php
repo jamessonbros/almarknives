@@ -48,6 +48,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 * @param string $id
 	 * @throws Exception
 	 */
+
 	public function __construct( $id ) {
 
 		// Verify the schedule id
@@ -73,7 +74,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 		if ( defined( 'HMBKP_EXCLUDE' ) && HMBKP_EXCLUDE )
 			parent::set_excludes( HMBKP_EXCLUDE, true );
 
-		parent::set_excludes($this->default_excludes(), true );
+		parent::set_excludes( $this->default_excludes(), true );
 
 		if ( defined( 'HMBKP_MYSQLDUMP_PATH' ) )
 			$this->set_mysqldump_command_path( HMBKP_MYSQLDUMP_PATH );
@@ -94,7 +95,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 		$this->set_database_dump_filename( implode( '-', array( sanitize_title( str_ireplace( array( 'http://', 'https://', 'www' ), '', home_url() ) ), $this->get_id(), $this->get_type(), date( 'Y-m-d-H-i-s', current_time( 'timestamp' ) ) ) ) . '.sql' );
 
 		// Setup the schedule if it isn't set
-		if ( ( ! $this->get_next_occurrence() && in_array( $this->get_reoccurrence(), array_keys(  $hmbkp_schedules ) ) ) || ( date( get_option( 'time_format' ), strtotime( HMBKP_SCHEDULE_TIME ) - ( get_option( 'gmt_offset' ) * 3600 ) ) !== date( get_option( 'time_format' ), $this->get_next_occurrence() ) ) )
+		if ( ( ! $this->get_next_occurrence() && in_array( $this->get_reoccurrence(), array_keys( $hmbkp_schedules ) ) ) || ( date( get_option( 'time_format' ), strtotime( HMBKP_SCHEDULE_TIME ) - ( get_option( 'gmt_offset' ) * 3600 ) ) !== date( get_option( 'time_format' ), $this->get_next_occurrence() ) ) )
 			$this->schedule();
 
 	}
@@ -116,7 +117,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	public function get_slug() {
 
 		// We cache slug in $this to save expensive calls to sanitize_title
-		if ( isset( $this->slug ) )
+		if ( ! empty( $this->slug ) )
 			return $this->slug;
 
 		return $this->slug = sanitize_title( $this->get_name() );
@@ -167,8 +168,6 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 
 		$this->options['type'] = $type;
 
-		$this->clear_filesize_cache();
-
 	}
 
 	/**
@@ -191,7 +190,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 *
 	 * @access public
 	 * @param mixed $excludes A comma separated list or array of exclude rules
-	 * @param bool $append Whether to replace or append to existing rules
+	 * @param bool  $append   Whether to replace or append to existing rules
 	 * @return string
 	 */
 	public function set_excludes( $excludes, $append = false ) {
@@ -230,15 +229,16 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 * Set the maximum number of backups to keep
 	 *
 	 * @param int $max
-	 * @throws Exception
+	 * @return bool|WP_Error
 	 */
 	public function set_max_backups( $max ) {
 
 		if ( empty( $max ) || ! is_int( $max ) )
-			throw new Exception( 'Argument 1 for ' . __METHOD__ . ' must be a valid integer' );
+			return new WP_Error( 'hmbkp_invalid_type_error', sprintf( __( 'Argument 1 for %s must be a valid integer', 'hmbkp' ) ), __METHOD__ );
 
 		$this->options['max_backups'] = $max;
 
+		return true;
 	}
 
 	/**
@@ -290,11 +290,11 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	public function get_filesize( $cached = true ) {
 
 		$filesize = 0;
-		
+
 		if ( $cached ) {
 
 			// Check if we have the filesize in the cache
-			$filesize = get_transient( 'hmbkp_schedule_' . $this->get_id() . '_filesize' );
+			$filesize = get_transient( 'hmbkp_schedule_' . $this->get_id() . '_' . $this->get_type()  . '_filesize' );
 
 			// If we do and it's not still calculating then return it straight away
 			if ( $filesize && $filesize !== 'calculating' )
@@ -308,7 +308,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 				$counter = 1;
 
 				// Keep checking the cached filesize to see if the other thread is finished
-				while ( 'calculating' === ( $filesize = $wpdb->get_var( "SELECT option_value FROM $wpdb->options WHERE option_name = '_transient_hmbkp_schedule_" . $this->get_id() . "_filesize'" ) ) ) {
+				while ( 'calculating' === ( $filesize = get_transient( 'hmbkp_schedule_' . $this->get_id() . '_' . $this->get_type()  . '_filesize' ) ) ) {
 
 					// Check once every 10 seconds
 					sleep( 10 );
@@ -317,7 +317,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 					if ( $counter === 30 )
 						break;
 
-					$counter++;
+					$counter ++;
 
 				}
 
@@ -330,25 +330,26 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 		}
 
 		// If we don't have it in cache then mark it as calculating
-		set_transient( 'hmbkp_schedule_' . $this->get_id() . '_filesize', 'calculating', time() + HOUR_IN_SECONDS );
+		set_transient( 'hmbkp_schedule_' . $this->get_id() . '_' . $this->get_type() . '_filesize', 'calculating', time() + HOUR_IN_SECONDS );
 
-    	// Don't include database if file only
+		// Don't include database if file only
 		if ( $this->get_type() != 'file' ) {
 
-    		global $wpdb;
+			global $wpdb;
 
-    		$res = $wpdb->get_results( 'SHOW TABLE STATUS FROM `' . DB_NAME . '`', ARRAY_A );
+			$res = $wpdb->get_results( 'SHOW TABLE STATUS FROM `' . DB_NAME . '`', ARRAY_A );
 
-    		foreach ( $res as $r )
-    			$filesize += (float) $r['Data_length'];
+			foreach ( $res as $r ) {
+				$filesize += (float) $r['Data_length'];
+			}
 
-    	}
+		}
 
-    	// Don't include files if database only
-   		if ( $this->get_type() != 'database' ) {
+		// Don't include files if database only
+		if ( $this->get_type() != 'database' ) {
 
-    		// Get rid of any cached filesizes
-    		clearstatcache();
+			// Get rid of any cached filesizes
+			clearstatcache();
 
 			$excludes = $this->exclude_string( 'regex' );
 
@@ -361,20 +362,20 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 				if ( ! @realpath( $file->getPathname() ) || ! $file->isReadable() )
 					continue;
 
-			    // Excludes
-			    if ( $excludes && preg_match( '(' . $excludes . ')', str_ireplace( trailingslashit( $this->get_root() ), '', HM_Backup::conform_dir( $file->getPathname() ) ) ) )
-			        continue;
+				// Excludes
+				if ( $excludes && preg_match( '(' . $excludes . ')', str_ireplace( trailingslashit( $this->get_root() ), '', HM_Backup::conform_dir( $file->getPathname() ) ) ) )
+					continue;
 
-			    $filesize += (float) $file->getSize();
+				$filesize += (float) $file->getSize();
 
 			}
 
 		}
 
 		// Cache for a day
-		set_transient( 'hmbkp_schedule_' . $this->get_id() . '_filesize', $filesize, time() + DAY_IN_SECONDS );
+		set_transient( 'hmbkp_schedule_' . $this->get_id() . '_' . $this->get_type() . '_filesize', $filesize, time() + DAY_IN_SECONDS );
 
-	    return $filesize;
+		return $filesize;
 
 	}
 
@@ -384,7 +385,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 * @param bool $cached
 	 * @return bool|string
 	 */
-	public function get_formatted_file_size( $cached = true ){
+	public function get_formatted_file_size( $cached = true ) {
 
 		return size_format( $this->get_filesize( $cached ) );
 	}
@@ -397,7 +398,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 */
 	public function is_filesize_cached() {
 
-		$size = get_transient( 'hmbkp_schedule_' . $this->get_id() . '_filesize' );
+		$size = get_transient( 'hmbkp_schedule_' . $this->get_id() . '_' . $this->get_type() . '_filesize' );
 
 		return ! ( ! $size || $size === 'calculating' );
 
@@ -411,7 +412,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 * @return void
 	 */
 	public function clear_filesize_cache() {
-		delete_transient( 'hmbkp_schedule_' . $this->get_id() . '_filesize' );
+		delete_transient( 'hmbkp_schedule_' . $this->get_id() . '_' . $this->get_type() . '_filesize' );
 	}
 
 	/**
@@ -477,7 +478,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 * Set the schedule reoccurrence
 	 *
 	 * @param string $reoccurrence
-	 * @throws Exception
+	 * @return bool|WP_Error
 	 */
 	public function set_reoccurrence( $reoccurrence ) {
 
@@ -485,7 +486,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 
 		// Check it's valid
 		if ( ! is_string( $reoccurrence ) || ! trim( $reoccurrence ) || ( ! in_array( $reoccurrence, array_keys( $hmbkp_schedules ) ) ) && $reoccurrence !== 'manually' )
-			throw new Exception( 'Argument 1 for ' . __METHOD__ . ' must be a valid cron reoccurrence or "manually"' );
+			return new WP_Error( 'hmbkp_invalid_argument_error', sprintf( __( 'Argument 1 for %s must be a valid cron reoccurrence or "manually"', 'hmbkp' ) ), __METHOD__ );
 
 		if ( isset( $this->options['reoccurrence'] ) && $this->options['reoccurrence'] === $reoccurrence )
 			return;
@@ -498,6 +499,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 		else
 			$this->schedule();
 
+		return true;
 	}
 
 	/**
@@ -522,13 +524,13 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	 *
 	 * @return array
 	 */
-	public function get_cron_schedules(){
+	public function get_cron_schedules() {
 
 		$schedules = wp_get_schedules();
 
 		// remove any schedule whose key is not prefixed with 'hmbkp_'
 		foreach ( $schedules as $key => $arr ) {
-			if( ! preg_match("/^hmbkp_/", $key ) )
+			if ( ! preg_match( '/^hmbkp_/', $key ) )
 				unset( $schedules[$key] );
 		}
 
@@ -677,91 +679,87 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 
 		switch ( $action ) :
 
-	    	case 'hmbkp_mysqldump_started' :
+			case 'hmbkp_mysqldump_started' :
 
-	    		$this->set_status( sprintf( __( 'Dumping Database %s', 'hmbkp' ), '(<code>' . $this->get_mysqldump_method() . '</code>)' ) );
+				$this->set_status( sprintf( __( 'Dumping Database %s', 'hmbkp' ), '(<code>' . $this->get_mysqldump_method() . '</code>)' ) );
+				break;
 
-	    	break;
+			case 'hmbkp_mysqldump_verify_started' :
 
-	    	case 'hmbkp_mysqldump_verify_started' :
-
-	    		$this->set_status( sprintf( __( 'Verifying Database Dump %s', 'hmbkp' ), '(<code>' . $this->get_mysqldump_method() . '</code>)' ) );
-
-	    	break;
+				$this->set_status( sprintf( __( 'Verifying Database Dump %s', 'hmbkp' ), '(<code>' . $this->get_mysqldump_method() . '</code>)' ) );
+				break;
 
 			case 'hmbkp_archive_started' :
 
-	    		$this->set_status( sprintf( __( 'Creating zip archive %s', 'hmbkp' ), '(<code>' . $this->get_archive_method() . '</code>)' ) );
+				$this->set_status( sprintf( __( 'Creating zip archive %s', 'hmbkp' ), '(<code>' . $this->get_archive_method() . '</code>)' ) );
+				break;
 
-	    	break;
+			case 'hmbkp_archive_verify_started' :
 
-	    	case 'hmbkp_archive_verify_started' :
+				$this->set_status( sprintf( __( 'Verifying Zip Archive %s', 'hmbkp' ), '(<code>' . $this->get_archive_method() . '</code>)' ) );
+				break;
 
-	    		$this->set_status( sprintf( __( 'Verifying Zip Archive %s', 'hmbkp' ), '(<code>' . $this->get_archive_method() . '</code>)' ) );
+			case 'hmbkp_backup_complete' :
 
-	    	break;
+				$this->set_status( __( 'Finishing Backup', 'hmbkp' ) );
+				break;
 
-	    	case 'hmbkp_backup_complete' :
-
-	    		$this->set_status( __( 'Finishing Backup', 'hmbkp' ) );
-
-	    	break;
-
-	    	case 'hmbkp_error' :
+			case 'hmbkp_error' :
 
 				if ( $this->get_errors() ) {
 
-			    	$file = $this->get_path() . '/.backup_errors';
+					$file = $this->get_path() . '/.backup_errors';
 
 					if ( file_exists( $file ) )
 						@unlink( $file );
 
-			    	if ( ! $handle = @fopen( $file, 'w' ) )
-			    		return;
+					if ( ! $handle = @fopen( $file, 'w' ) )
+						return;
 
 					fwrite( $handle, json_encode( $this->get_errors() ) );
-
-			    	fclose( $handle );
-
-			    }
-
-			break;
-
-			case 'hmbkp_warning' :
-
-			    if ( $this->get_warnings() ) {
-
-					$file = $this->get_path() . '/.backup_warnings';
-
-					if ( file_exists( $file ) )
-			  			@unlink( $file );
-
-					if ( ! $handle = @fopen( $file, 'w' ) )
-			  	  		return;
-
-			  		fwrite( $handle, json_encode( $this->get_warnings() ) );
 
 					fclose( $handle );
 
 				}
 
-	    	break;
+				break;
 
-	    endswitch;
+			case 'hmbkp_warning' :
 
-	    // Pass the actions to all the services
-	    foreach ( HMBKP_Services::get_services( $this ) as $service )
-	    	$service->action( $action );
+				if ( $this->get_warnings() ) {
 
-	    // Fire the parent function as well
-	    parent::do_action( $action );
+					$file = $this->get_path() . '/.backup_warnings';
+
+					if ( file_exists( $file ) )
+						@unlink( $file );
+
+					if ( ! $handle = @fopen( $file, 'w' ) )
+						return;
+
+					fwrite( $handle, json_encode( $this->get_warnings() ) );
+
+					fclose( $handle );
+
+				}
+
+				break;
+
+		endswitch;
+
+		// Pass the actions to all the services
+		foreach ( HMBKP_Services::get_services( $this ) as $service ) {
+			$service->action( $action );
+		}
+
+		// Fire the parent function as well
+		parent::do_action( $action );
 
 	}
 
 	/**
 	 * Get the backups created by this schedule
 	 *
-	 * @todo look into using recursiveDirectoryIterator and recursiveRegexIterator
+	 * @todo   look into using recursiveDirectoryIterator and recursiveRegexIterator
 	 * @access public
 	 * @return string[] - file paths of the backups
 	 */
@@ -773,7 +771,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 
 			while ( false !== ( $file = readdir( $handle ) ) )
 				if ( pathinfo( $file, PATHINFO_EXTENSION ) === 'zip' && strpos( $file, $this->get_id() ) !== false && $this->get_running_backup_filename() != $file )
-		     		$files[@filemtime( trailingslashit( $this->get_path() ) . $file )] = trailingslashit( $this->get_path() ) . $file;
+					$files[@filemtime( trailingslashit( $this->get_path() ) . $file )] = trailingslashit( $this->get_path() ) . $file;
 
 			closedir( $handle );
 
@@ -793,7 +791,7 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 	public function delete_old_backups() {
 
 		if ( count( $this->get_backups() ) <= $this->get_max_backups() )
-	   		return;
+			return;
 
 		array_map( array( $this, 'delete_backup' ), array_slice( $this->get_backups(), $this->get_max_backups() ) );
 
@@ -801,26 +799,26 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 
 	/**
 	 * Delete a specific back up file created by this schedule
-	 *
 	 * @param string $filepath
-	 * @throws Exception
+	 * @return bool|WP_Error
 	 */
 	public function delete_backup( $filepath ) {
 
 		// Check that it's a valid filepath
 		if ( empty( $filepath ) || ! is_string( $filepath ) )
-			throw new Exception( 'Argument 1 for ' . __METHOD__ . ' must be a non empty string' );
+			return new WP_Error( 'hmbkp_empty_string_error', sprintf( __( 'Argument 1 for %s must be a non empty string', 'hmbkp' ) ), __METHOD__ );
 
 		// Make sure it exists
 		if ( ! file_exists( $filepath ) )
-			throw new Exception( $filepath . ' doesn\'t exist' );
+			return new WP_Error( 'hmbkp_file_error', sprintf( __( '%s dpesn\'t exist', 'hmbkp' ) ), $filepath );
 
 		// Make sure it was created by this schedule
 		if ( strpos( $filepath, $this->get_id() ) === false )
-			throw new Exception( 'That backup wasn\'t created by this schedule' );
+			return new WP_Error( 'hmbkp_backup_error', sprintf( __( 'That backup wasn\'t created by this schedule', 'hmbkp' ) ) );
 
 		unlink( $filepath );
 
+		return true;
 	}
 
 	/**
@@ -881,29 +879,69 @@ class HMBKP_Scheduled_Backup extends HM_Backup {
 
 		$excluded = array();
 
-		// updraftplus plugin
-		if ( is_dir( trailingslashit( WP_CONTENT_DIR ) . 'updraft' ) ) {
-			$excluded[] = trailingslashit( WP_CONTENT_DIR ) . 'updraft';
+		// Leftover backup folders can be either under content dir, or under the uploads dir
+		$hmbkp_folders = array_merge(
+			$this->find_backup_folders( 'backupwordpress-', WP_CONTENT_DIR ),
+			$this->find_backup_folders( 'backupwordpress-', WP_CONTENT_DIR . '/uploads' )
+		);
+
+
+		if ( ! empty( $hmbkp_folders ) ) {
+			foreach ( $hmbkp_folders as $path ) {
+				$excluded[] = $path;
+			}
+
 		}
 
-		//wponlinebackup plugin
-		if ( is_dir( trailingslashit( WP_CONTENT_DIR ) . 'backups' ) ) {
-			$excluded[] = trailingslashit( WP_CONTENT_DIR ) . 'backups';
-		}
+		$blacklisted = array(
+			'updraft'      => trailingslashit( WP_CONTENT_DIR ) . trailingslashit( 'updraft' ),
+			'wponlinebckp' => trailingslashit( WP_CONTENT_DIR ) . trailingslashit( 'backups' ),
+			'duplicator'   => trailingslashit( ABSPATH ) . trailingslashit( 'wp-snapshots' ),
+			'backupbuddy'  => trailingslashit( WP_CONTENT_DIR ) . trailingslashit( 'uploads/backupbuddy_backups' ),
+			'wpdbmanager'  => trailingslashit( WP_CONTENT_DIR ) . trailingslashit( 'backup-db' ),
+			'supercache'   => trailingslashit( WP_CONTENT_DIR ) . trailingslashit( 'cache' )
+		);
 
-		//duplicator plugin
-		if ( is_dir( trailingslashit( ABSPATH ) . 'wp-snapshots' ) ) {
-			$excluded[] = trailingslashit( ABSPATH ) . 'wp-snapshots';
+		foreach ( $blacklisted as $key => $path ) {
+			if ( is_dir( $path ) ) {
+				$excluded[] = $path;
+			}
 		}
-
-		if ( defined( 'WP_BACKUP_DIR' ) && is_dir( WP_BACKUP_DIR ) )
-			$excluded[] = WP_BACKUP_DIR;
 
 		// version control dirs
 		$excluded[] = '.svn/';
 		$excluded[] = '.git/';
 
 		return apply_filters( 'hmbkp_default_excludes', $excluded );
+	}
+
+
+	/**
+	 * Returns an array with the BackUpWordPress backup folders in the specified directory
+	 *
+	 * @param $needle
+	 * @param $haystack
+	 * @return array
+	 */
+	protected function find_backup_folders( $needle, $haystack ) {
+
+		$found_folders = array();
+
+		foreach ( glob( $haystack . '/*', GLOB_ONLYDIR | GLOB_NOSORT ) as $folder ) {
+
+			$pos = strpos( $folder, $needle );
+
+			$default_path = get_option( 'hmbkp_default_path' );
+
+			if ( ( false !== $pos ) && ( $folder !== $default_path ) ) {
+
+				$found_folders[] = trailingslashit( $folder );
+
+			}
+
+		}
+
+		return $found_folders;
 	}
 
 }

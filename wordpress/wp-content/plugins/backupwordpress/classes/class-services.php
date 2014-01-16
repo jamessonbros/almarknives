@@ -21,8 +21,8 @@ abstract class HMBKP_Service {
 	/**
 	 * The instance HMBKP_Backup_Schedule that this service is
 	 * is currently working with
-     *
-     * @var HMBKP_Scheduled_Backup
+	 *
+	 * @var HMBKP_Scheduled_Backup
 	 */
 	protected $schedule;
 
@@ -118,8 +118,9 @@ abstract class HMBKP_Service {
 
 		if ( $errors && $errors = array_flip( $errors ) ) {
 
-			foreach( $errors as $error => &$field )
+			foreach ( $errors as $error => &$field ) {
 				$field = get_class( $this ) . '[' . $field . ']';
+			}
 
 			return array_flip( $errors );
 
@@ -127,7 +128,7 @@ abstract class HMBKP_Service {
 
 		// Only overwrite settings if they changed
 		if ( ! empty( $new_data ) )
-		    $this->schedule->set_service_options( $classname, $new_data );
+			$this->schedule->set_service_options( $classname, $new_data );
 
 		return array();
 
@@ -156,18 +157,26 @@ abstract class HMBKP_Service {
 
 		foreach ( $schedules as $schedule ) {
 
-			if( $schedule->get_id() != $this->schedule->get_id() ) {
+			if ( $schedule->get_id() != $this->schedule->get_id() ) {
 
 				$options = $schedule->get_service_options( $service );
-				if ( ! empty( $options ) ) {
+
+				if ( ! empty( $options ) )
 					return $options;
-				}
+
 			}
 
 		}
 
 		return array();
 	}
+
+	/**
+	 * Handles passing service specific data to Intercom
+	 */
+	public static function intercom_data() {}
+
+	public static function intercom_data_html() {}
 
 }
 
@@ -184,7 +193,7 @@ class HMBKP_Services {
 	 * @var object HMBKP_Services
 	 * @static
 	 */
-    private static $instance;
+	private static $instance;
 
 	/**
 	 * The array of services
@@ -195,15 +204,15 @@ class HMBKP_Services {
 	 * @var  array
 	 * @static
 	 */
-    private $services = array();
+	private $services = array();
 
-    /**
-     * The current schedule object
-     *
-     * @access private
-     * @var object HMBKP_Scheduled_Backup
-     */
-    private $schedule;
+	/**
+	 * The current schedule object
+	 *
+	 * @access private
+	 * @var object HMBKP_Scheduled_Backup
+	 */
+	private $schedule;
 
 	/**
 	 * Get the current instance
@@ -211,14 +220,14 @@ class HMBKP_Services {
 	 * @access public
 	 * @static
 	 */
-    public static function instance() {
+	public static function instance() {
 
-        if ( ! isset( self::$instance ) )
-            self::$instance = new HMBKP_Services;
+		if ( ! isset( self::$instance ) )
+			self::$instance = new HMBKP_Services;
 
-        return self::$instance;
+		return self::$instance;
 
-    }
+	}
 
 	/**
 	 * Get the array of registered services
@@ -226,44 +235,48 @@ class HMBKP_Services {
 	 * @param HMBKP_Scheduled_Backup $schedule
 	 * @return HMBKP_SERVICE[]
 	 */
-		public static function get_services( HMBKP_Scheduled_Backup $schedule = null ) {
+	public static function get_services( HMBKP_Scheduled_Backup $schedule = null ) {
 
-    	if ( is_null( $schedule ) )
-    		return self::instance()->services;
+		if ( is_null( $schedule ) )
+			return self::instance()->services;
 
-   		self::instance()->schedule = $schedule;
+		self::instance()->schedule = $schedule;
 
-    	return array_map( array( self::instance(), 'instantiate' ), self::instance()->services );
+		return array_map( array( self::instance(), 'instantiate' ), self::instance()->services );
 
-    }
+	}
 
 	/**
 	 * Register a new service
 	 *
-	 * @access public
+	 * @param $filepath
+	 * @param $classname
+	 * @return bool|WP_Error
 	 */
-    public static function register( $filepath, $classname ) {
+	public static function register( $filepath, $classname ) {
 
-    	if ( ! file_exists( $filepath ) )
-    		throw new Exception( 'Argument 1 for ' . __METHOD__ . ' must be a valid filepath' );
+		if ( ! file_exists( $filepath ) )
+			return new WP_Error( 'hmbkp_invalid_path_error', sprintf( __( 'Argument 1 for %s must be a valid filepath', ' hmbkp' ), __METHOD__ ) );
 
 		self::instance()->services[$filepath] = $classname;
 
-    }
+		return true;
+	}
 
 	/**
 	 * De-register an existing service
-	 *
-	 * @access public
+	 * @param string $filepath
+	 * @return bool|WP_Error
 	 */
-    public static function unregister( $filepath ) {
+	public static function unregister( $filepath ) {
 
-    	if ( ! isset( self::instance()->services[$filepath] ) )
-    		throw new Exception( 'Argument 1 for ' . __METHOD__ . ' must be a registered service' );
+		if ( ! isset( self::instance()->services[$filepath] ) )
+			return new WP_Error( 'hmbkp_unrecognized_service_error', sprintf( __( 'Argument 1 for %s must be a registered service', ' hmbkp' ), __METHOD__ ) );
 
-    	unset( self::instance()->services[$filepath] );
+		unset( self::instance()->services[$filepath] );
 
-    }
+		return true;
+	}
 
 	/**
 	 * Instantiate the individual service classes
@@ -271,17 +284,16 @@ class HMBKP_Services {
 	 * @param string $classname
 	 *
 	 * @return array An array of instantiated classes
-	 * @throws Exception
 	 */
 	private static function instantiate( $classname ) {
 
 		if ( ! class_exists( $classname ) )
-			throw new Exception( 'Argument 1 for ' . __METHOD__ . ' must be a valid class' );
+			return new WP_Error( 'hmbkp_invalid_type_error', sprintf( __( 'Argument 1 for %s must be a valid class', 'hmbkp' ) ), __METHOD__ );
 
-        /**
-         * @var HMBKP_Service
-         */
-        $class = new $classname;
+		/**
+		 * @var HMBKP_Service
+		 */
+		$class = new $classname;
 
 		if ( self::instance()->schedule )
 			$class->set_schedule( self::instance()->schedule );

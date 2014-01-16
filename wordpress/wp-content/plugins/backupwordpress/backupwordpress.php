@@ -5,12 +5,12 @@ Plugin Name: BackUpWordPress
 Plugin URI: http://hmn.md/backupwordpress/
 Description: Simple automated backups of your WordPress powered website. Once activated you'll find me under <strong>Tools &rarr; Backups</strong>.
 Author: Human Made Limited
-Version: 2.3.3
+Version: 2.4.1
 Author URI: http://hmn.md/
 */
 
 /*
-Copyright 2011 - 2013 Human Made Limited  (email : support@hmn.md)
+Copyright 2011 - 2014 Human Made Limited  (email : support@hmn.md)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@ if ( ! defined( 'HMBKP_PLUGIN_PATH' ) )
 
 if ( ! defined( 'HMBKP_PLUGIN_URL' ) )
 	define( 'HMBKP_PLUGIN_URL', plugin_dir_url(  __FILE__  ) );
-
 
 define( 'HMBKP_PLUGIN_LANG_DIR', apply_filters( 'hmbkp_filter_lang_dir', HMBKP_PLUGIN_SLUG . '/languages/' ) );
 
@@ -89,26 +88,26 @@ if ( ! class_exists( 'HM_Backup' ) )
 	require_once( HMBKP_PLUGIN_PATH . '/hm-backup/hm-backup.php' );
 
 // Load the schedules
-require_once( HMBKP_PLUGIN_PATH . '/classes/schedule.php' );
-require_once( HMBKP_PLUGIN_PATH . '/classes/schedules.php' );
+require_once( HMBKP_PLUGIN_PATH . '/classes/class-schedule.php' );
+require_once( HMBKP_PLUGIN_PATH . '/classes/class-schedules.php' );
 
 // Load the core functions
 require_once( HMBKP_PLUGIN_PATH . '/functions/core.php' );
 require_once( HMBKP_PLUGIN_PATH . '/functions/interface.php' );
 
 // Load Services
-require_once( HMBKP_PLUGIN_PATH . '/classes/services.php' );
+require_once( HMBKP_PLUGIN_PATH . '/classes/class-services.php' );
 
 // Load the email service
-require_once( HMBKP_PLUGIN_PATH . '/classes/email.php' );
+require_once( HMBKP_PLUGIN_PATH . '/classes/class-email.php' );
 
 // Load the wp cli command
 if ( defined( 'WP_CLI' ) && WP_CLI )
 	include( HMBKP_PLUGIN_PATH . '/classes/wp-cli.php' );
 
 // Hook in the activation and deactivation actions
-register_activation_hook( HMBKP_PLUGIN_SLUG . '/plugin.php', 'hmbkp_activate' );
-register_deactivation_hook( HMBKP_PLUGIN_SLUG . '/plugin.php', 'hmbkp_deactivate' );
+register_activation_hook( HMBKP_PLUGIN_SLUG . '/backupwordpress.php', 'hmbkp_activate' );
+register_deactivation_hook( HMBKP_PLUGIN_SLUG . '/backupwordpress.php', 'hmbkp_deactivate' );
 
 // Don't activate on anything less than PHP 5.2.4
 if ( version_compare( phpversion(), HMBKP_REQUIRED_PHP_VERSION, '<' ) ) {
@@ -153,29 +152,85 @@ function hmbkp_init() {
 	if ( HMBKP_VERSION != get_option( 'hmbkp_plugin_version' ) )
 		hmbkp_update();
 
-	// Load admin css and js
-	if ( isset( $_GET['page'] ) && $_GET['page'] == HMBKP_PLUGIN_SLUG ) {
+}
+add_action( 'admin_init', 'hmbkp_init' );
 
-		wp_enqueue_script( 'hmbkp-colorbox', HMBKP_PLUGIN_URL . '/assets/colorbox/jquery.colorbox-min.js', array( 'jquery' ), sanitize_title( HMBKP_VERSION ) );
-		wp_enqueue_script( 'hmbkp', HMBKP_PLUGIN_URL . '/assets/hmbkp.js', array( 'jquery-ui-tabs', 'jquery-ui-widget', 'hmbkp-colorbox' ), sanitize_title( HMBKP_VERSION ) );
+function hmbkp_load_scripts() {
 
-		wp_localize_script( 'hmbkp', 'hmbkp', array(
+	wp_enqueue_script( 'hmbkp-colorbox', HMBKP_PLUGIN_URL . 'assets/colorbox/jquery.colorbox-min.js', array( 'jquery', 'jquery-ui-tabs' ), sanitize_title( HMBKP_VERSION ) );
+
+	wp_enqueue_script( 'hmbkp', HMBKP_PLUGIN_URL . 'assets/hmbkp.js', array( 'hmbkp-colorbox' ), sanitize_title( HMBKP_VERSION ) );
+
+	wp_localize_script(
+		'hmbkp',
+		'hmbkp',
+		array(
+			'page_slug'    => HMBKP_PLUGIN_SLUG,
 			'nonce'         		=> wp_create_nonce( 'hmbkp_nonce' ),
 			'update'				=> __( 'Update', 'hmbkp' ),
 			'cancel'				=> __( 'Cancel', 'hmbkp' ),
-			'delete_schedule'		=> __( 'Are you sure you want to delete this schedule? All of it\'s backups will also be deleted.' ) . "\n\n" . __( '\'Cancel\' to go back, \'OK\' to delete.', 'hmbkp' ) . "\n",
+			'delete_schedule'		=> __( 'Are you sure you want to delete this schedule? All of it\'s backups will also be deleted.', 'hmbkp' ) . "\n\n" . __( '\'Cancel\' to go back, \'OK\' to delete.', 'hmbkp' ) . "\n",
 			'delete_backup'			=> __( 'Are you sure you want to delete this backup?', 'hmbkp' ) . "\n\n" . __( '\'Cancel\' to go back, \'OK\' to delete.', 'hmbkp' ) . "\n",
 			'remove_exclude_rule'	=> __( 'Are you sure you want to remove this exclude rule?', 'hmbkp' ) . "\n\n" . __( '\'Cancel\' to go back, \'OK\' to delete.', 'hmbkp' ) . "\n",
 			'remove_old_backups'	=> __( 'Reducing the number of backups that are stored on this server will cause some of your existing backups to be deleted, are you sure that\'s what you want?', 'hmbkp' ) . "\n\n" . __( '\'Cancel\' to go back, \'OK\' to delete.', 'hmbkp' ) . "\n"
-		) );
+		)
+	);
 
-		wp_enqueue_style( 'hmbkp_colorbox', HMBKP_PLUGIN_URL . '/assets/colorbox/example1/colorbox.css', false, HMBKP_VERSION );
-		wp_enqueue_style( 'hmbkp', HMBKP_PLUGIN_URL . '/assets/hmbkp.css', false, HMBKP_VERSION );
+}
+add_action( 'admin_print_scripts-tools_page_backupwordpress', 'hmbkp_load_scripts' );
+
+/**
+ * Load Intercom and send across user information and server info
+ *
+ * Only loaded if the user has opted in.
+ *
+ * @return void
+ */
+function hmbkp_load_intercom_script() {
+
+	if ( ! get_option( 'hmbkp_enable_support' ) )
+		return;
+
+	require_once HMBKP_PLUGIN_PATH . 'classes/class-requirements.php';
+
+	foreach ( HMBKP_Requirements::get_requirement_groups() as $group ) {
+
+		foreach ( HMBKP_Requirements::get_requirements( $group ) as $requirement ) {
+
+			$info[$requirement->name()] = $requirement->result();
+
+		}
 
 	}
 
+	foreach ( HMBKP_Services::get_services() as $file => $service )
+		array_merge( $info, call_user_func( array( $service, 'intercom_data' ) ) );
+
+	$current_user = wp_get_current_user();
+
+	$info['user_hash'] = hash_hmac( "sha256", $current_user->user_email, "fcUEt7Vi4ym5PXdcr2UNpGdgZTEvxX9NJl8YBTxK" );
+	$info['email'] = $current_user->user_email;
+	$info['created_at'] = strtotime( $current_user->user_registered );
+	$info['app_id'] = "7f1l4qyq";
+	$info['name'] = $current_user->user_nicename;
+	$info['widget'] = array( 'activator' => '#intercom' ); ?>
+
+	<script id="IntercomSettingsScriptTag">
+		window.intercomSettings = <?php echo json_encode( $info ); ?>;
+	</script>
+	<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://static.intercomcdn.com/intercom.v1.js';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}};})()</script>
+
+<?php }
+add_action( 'admin_footer-tools_page_backupwordpress', 'hmbkp_load_intercom_script' );
+
+function hmbkp_load_styles(){
+
+	wp_enqueue_style( 'hmbkp_colorbox', HMBKP_PLUGIN_URL . 'assets/colorbox/example1/colorbox.css', false, HMBKP_VERSION );
+	wp_enqueue_style( 'hmbkp', HMBKP_PLUGIN_URL . 'assets/hmbkp.css', false, HMBKP_VERSION );
+
 }
-add_action( 'admin_init', 'hmbkp_init' );
+add_action( 'admin_print_styles-tools_page_backupwordpress', 'hmbkp_load_styles' );
+
 
 /**
  * Function to run when the schedule cron fires
@@ -184,7 +239,7 @@ add_action( 'admin_init', 'hmbkp_init' );
 function hmbkp_schedule_hook_run( $schedule_id ) {
 
 	$schedules = HMBKP_Schedules::get_instance();
-	$schedule = $schedules->get_schedule( $schedule_id );
+	$schedule  = $schedules->get_schedule( $schedule_id );
 
 	if ( ! $schedule )
 		return;
@@ -198,7 +253,7 @@ add_action( 'hmbkp_schedule_hook', 'hmbkp_schedule_hook_run' );
 /**
  * Loads the plugin text domain for translation
  * This setup allows a user to just drop his custom translation files into the WordPress language directory
- * Files will need to be in a subdirectory with the name of the textdomain 'backupwordpress-do'
+ * Files will need to be in a subdirectory with the name of the textdomain 'hmbkp'
  */
 function hmbkp_plugin_textdomain() {
 
@@ -215,7 +270,26 @@ function hmbkp_plugin_textdomain() {
 	load_textdomain( $textdomain, $hmbkp_wp_lang_dir );
 
 	// Translations: Secondly, look in plugin's "languages" folder = default
-	load_plugin_textdomain( $textdomain, FALSE, HMBKP_PLUGIN_SLUG . '/languages/' );
+	load_plugin_textdomain( $textdomain, false, HMBKP_PLUGIN_LANG_DIR );
 
 }
-add_action( 'init', 'hmbkp_plugin_textdomain', 1);
+add_action( 'init', 'hmbkp_plugin_textdomain', 1 );
+
+function hmbkp_display_server_info_tab() {
+
+	require_once( HMBKP_PLUGIN_PATH . '/classes/class-requirements.php' );
+
+	ob_start();
+	require_once 'admin/server-info.php';
+	$info = ob_get_clean();
+
+	get_current_screen()->add_help_tab(
+		array(
+			'title' => __( 'Server Info', 'backupwordpress' ),
+			'id' => 'hmbkp_server',
+			'content' => $info
+		)
+	);
+
+}
+add_action( 'load-tools_page_backupwordpress', 'hmbkp_display_server_info_tab' );

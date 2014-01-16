@@ -2,8 +2,8 @@
 Contributors: humanmade, willmot, pauldewouters, joehoyle, mattheu, tcrsavage, cuvelier
 Tags: back up, backup, backups, database, zip, db, files, archive, wp-cli, humanmade
 Requires at least: 3.3.3
-Tested up to: 3.6
-Stable tag: 2.3.3
+Tested up to: 3.8
+Stable tag: 2.4.1
 
 Simple automated back ups of your WordPress powered website.
 
@@ -103,26 +103,43 @@ You can also tweet <a href="http://twitter.com/humanmadeltd">@humanmadeltd</a> o
 
 == Changelog ==
 
-#### 2.3.3
+#### 2.4.1
 
-* Add missing colorbox assets
+* Add missing colorbox images
+
+#### 2.4
+
+* Support for new premium extensions for storing backups in a variety of online services.
+* Exclude the WP DB Manager backups and WP Super Cache cache directories by default.
+* We now use Intercom to offer support directly from within the plugin, opt-in of course.
+* More i18n fixes / improvements.
+* We no longer show download links if your backups directory isn't web accessible.
+* Fix a bug that caused the plugin activation and deactivation hooks from firing.
+* Correctly handle `MYSQL TIMESTAMP` columns in database dumps.
+* `mysqldump` and `zip` are now correctly recognised on SmartOS.
+* Schedule names are now translatable.
+* Avoid having to re-calculate the filesize when a schedules type is set.
+* Compatibility with WordPress 3.8
+
 
 #### 2.3.2
 
-* Correct version number
+* Correct version number.
 
 #### 2.3.1
 
-* Fix a PHP strict error
-* Save and close as separate buttons
-* Fix bug that caused multiple notification emails
-* Fixes typo in database option name
-* Updated translations
-* Improve PHP docblocks
-* Make schedules class a singleton
-* Exclude popular backup plugin folders by default
-* Exclude version control folders by default
-* Fix broken localisation
+* Fix a PHP strict error.
+* Save and close as separate buttons.
+* Fix bug that caused multiple notification emails.
+* Fixes typo in database option name.
+* Updated translations.
+* Improve PHP docblocks.
+* Make schedules class a singleton.
+* Exclude popular backup plugin folders by default.
+* Exclude version control folders by default.
+* Fix broken localisation.
+* Use `wp_safe_redirect` instead of `wp_redirect` for internal form submissions
+*
 
 #### 2.3
 
