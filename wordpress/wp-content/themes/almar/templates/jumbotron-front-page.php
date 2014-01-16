@@ -28,8 +28,8 @@
 		    <div class="item">
 		    	<h1>UltraChef</h1>
 		    	<p>Laminated VG-10 blades and ergonomic stainless handles make Al Mar Stainless Ultra Chef knives perfect for any kitchen.</p>
-		    	<p><a href="#" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
-		    	<p><a href="#"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultrachef.png" alt="" class="img-responsive"></a></p>
+		    	<p><a href="/product-category/kitchen-knives/?orderby=price-desc" class="btn btn-primary btn-lg">Shop Now &raquo;</a></p>
+		    	<p><a href="/product-category/kitchen-knives/?orderby=price-desc"><img src="<?php echo get_stylesheet_directory_uri() ?>/assets/img/carousel/ultrachef.png" alt="" class="img-responsive"></a></p>
 		    </div>
 		    <div class="item">
 		    	<h1>UltraLights</h1>
