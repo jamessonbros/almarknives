@@ -1,0 +1,31 @@
+.clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; } .clearfix { display: inline-block; } /* Hide from IE Mac \*/ .clearfix { display: block; } /* End hide from IE Mac */ .none { display: none; } /* End Clearfix */
+
+#wc_catalog_restrictions .list-column {
+    float:left;
+    margin-right: 15px;
+}
+
+#wc_catalog_restrictions .list-column input {
+    margin-right: 3px;
+    width: 10px !important;
+}
+
+#wc_catalog_restrictions .form-field label {
+    margin-right: 10px;
+    width:200px;
+}
+
+.wc_restrictions_options_panel {
+    padding:9px;
+    color:#555;
+    margin-left:225px;
+}
+
+
+.woocommerce_options_panel .wc_restrictions_options_panel label {
+    width:100%;
+}
+
+#wc_catalog_restrictions_locations_container {
+    margin:0 0 15px 0;
+}
