@@ -131,7 +131,7 @@ class WC_Gateway_Stripe extends WC_Payment_Gateway {
      */
     function init_form_fields() {
 
-    	$this->form_fields = array(
+    	$this->form_fields = apply_filters( 'wc_stripe_settings', array(
 			'enabled' => array(
 							'title' => __( 'Enable/Disable', 'wc_stripe' ),
 							'label' => __( 'Enable Stripe', 'wc_stripe' ),
@@ -202,7 +202,7 @@ class WC_Gateway_Stripe extends WC_Payment_Gateway {
 							'type'        => 'text',
 							'default'     => ''
 						),
-			);
+			));
     }
 
 	/**
@@ -244,7 +244,7 @@ class WC_Gateway_Stripe extends WC_Payment_Gateway {
 				<div class="clear"></div>
 			<?php endif; ?>
 
-			<div class="stripe_new_card">
+			<div class="stripe_new_card" <?php if ( $checked === 0 ) : ?>style="display:none;"<?php endif; ?>>
 
 				<?php if ( $this->stripe_checkout ) : ?>
 
@@ -260,7 +260,7 @@ class WC_Gateway_Stripe extends WC_Payment_Gateway {
 				<?php else : ?>
 
 					<p class="form-row form-row-wide">
-						<label for="stripe_cart_number"><?php _e("Credit Card number", 'wc_stripe') ?> <span class="required">*</span></label>
+						<label for="stripe_card_number"><?php _e("Credit Card number", 'wc_stripe') ?> <span class="required">*</span></label>
 						<input type="text" autocomplete="off" class="input-text card-number" />
 					</p>
 					<div class="clear"></div>
@@ -404,21 +404,22 @@ class WC_Gateway_Stripe extends WC_Payment_Gateway {
 				$post_data['card']		= $stripe_token;
 
 			// Other charge data
-			$post_data['amount']		= $order->order_total * 100; // In cents, minimum amount = 50
-			$post_data['currency']		= strtolower( get_woocommerce_currency() );
-			$post_data['description']	= sprintf( __( '%s - Order %s', 'wp_stripe' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
-			$post_data['capture']       = $this->capture ? 'true' : 'false';
+			$post_data['amount']      = $order->order_total * 100; // In cents, minimum amount = 50
+			$post_data['currency']    = strtolower( get_woocommerce_currency() );
+			$post_data['description'] = sprintf( __( '%s - Order %s', 'wp_stripe' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+			$post_data['capture']     = $this->capture ? 'true' : 'false';
+			$post_data['expand[]']    = 'balance_transaction';
 
 			// Make the request
 			$response = wp_remote_post( $this->api_endpoint . 'v1/charges', array(
-   				'method'		=> 'POST',
+   				'method'		 => 'POST',
    				'headers' => array(
-					'Authorization' => 'Basic ' . base64_encode( $this->secret_key . ':' )
+					'Authorization'  => 'Basic ' . base64_encode( $this->secret_key . ':' )
 				),
-    			'body' 			=> $post_data,
-    			'timeout' 		=> 70,
-    			'sslverify' 	=> false,
-    			'user-agent' 	=> 'WooCommerce ' . $woocommerce->version
+				'body'           => $post_data,
+				'timeout'        => 70,
+				'sslverify'      => false,
+				'user-agent'     => 'WooCommerce ' . $woocommerce->version
 			));
 
 			if ( is_wp_error($response) )
@@ -445,8 +446,12 @@ class WC_Gateway_Stripe extends WC_Payment_Gateway {
 
 				// Store other data such as fees
 				update_post_meta( $order->id, 'Stripe Payment ID', $parsed_response->id );
-				update_post_meta( $order->id, 'Stripe Fee', number_format( $parsed_response->fee / 100, 2, '.', '' ) );
-				update_post_meta( $order->id, 'Net Revenue From Stripe', ( $order->order_total - number_format( $parsed_response->fee / 100, 2, ',', '.' ) ) );
+
+				if ( isset( $parsed_response->balance_transaction ) && isset( $parsed_response->balance_transaction->fee ) ) {
+					$fee = number_format( $parsed_response->balance_transaction->fee / 100, 2, '.', '' );
+					update_post_meta( $order->id, 'Stripe Fee', $fee );
+					update_post_meta( $order->id, 'Net Revenue From Stripe', $order->order_total - $fee );
+				}
 
 				if ( $parsed_response->captured	) {
 
@@ -536,8 +541,8 @@ class WC_Gateway_Stripe extends WC_Payment_Gateway {
 		global $woocommerce;
 
 		$response = wp_remote_post( $this->api_endpoint . 'v1/' . $api, array(
-				'method'		=> 'POST',
-				'headers' => array(
+				'method'        => 'POST',
+				'headers'       => array(
 				'Authorization' => 'Basic ' . base64_encode( $this->secret_key . ':' )
 			),
 			'body' 			=> $request,

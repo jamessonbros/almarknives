@@ -129,7 +129,7 @@ if (!class_exists('UserVoice_Admin')) {
 				),
 	    		'uv_feedback_tab' => array(  
 					'title' 			=> __('UserVoice feedback tab unique ID', 'woocommerce'),
-					'description' 		=> __('This is the unique ID that is part of the feedback tab code provided by UserVoice. You will find the full code under Settings &gt; Channels in your UserVoice admin console and inside the code is a line that reads: \'widget.uservoice.com/UNIQUE_ID_HERE.js\' - copy the unique ID from that section and paste it in here (ID will be no more than 22 alpha-numeric characters). Leave this field blank to not show the feedback tab.', 'woocommerce'),
+					'description' 		=> __('This is the unique ID that is part of the widget code provided by UserVoice. You will find the full code inside Step2 on the Settings &gt; Widgets page in your UserVoice admin console and inside the code is a line that reads: \'widget.uservoice.com/UNIQUE_ID_HERE.js\' - copy the unique ID from that section and paste it in here (ID will be no more than 22 alpha-numeric characters). Leave this field blank to not show the feedback tab.', 'woocommerce'),
 					'type' 				=> 'text',
 			    	'default' 			=> '' // Backwards compat
 				),

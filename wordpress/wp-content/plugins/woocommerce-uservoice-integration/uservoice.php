@@ -3,11 +3,11 @@
 Plugin Name: WooCommerce UserVoice Integration
 Plugin URI: http://www.woothemes.com/extension/uservoice/
 Description: UserVoice support desk integration for WooCommerce
-Version: 1.1.2
+Version: 1.1.3
 Author: WooThemes
 Author URI: http://www.woothemes.com
 Requires at least: 3.0
-Tested up to: 3.6
+Tested up to: 3.7.1
 
 	Copyright: © 2009-2011 WooThemes.
 	License: GNU General Public License v3.0

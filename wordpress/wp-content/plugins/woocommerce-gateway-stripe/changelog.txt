@@ -1,5 +1,15 @@
 *** Stripe Changelog ***
 
+2013.12.02 - version 1.7.6
+ * Fix card display
+
+2013.11.27 - version 1.7.5
+ * Show payment method for subscriptions on account page
+
+2013.11.20 - version 1.7.4
+ * Expand/close when using saved cards.
+ * Use balance_transaction to get and store fees
+
 2013.11.01 - version 1.7.3
  * Default to saved card
 

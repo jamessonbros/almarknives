@@ -1,5 +1,20 @@
 jQuery( function() {
 
+	/* Open and close */
+	jQuery("form.checkout, form#order_review").on('change', 'input[name=stripe_customer_id]', function() {
+
+		if ( jQuery('input[name=stripe_customer_id]:checked').val() == 'new' ) {
+
+			jQuery('div.stripe_new_card').slideDown( 200 );
+
+		} else {
+
+			jQuery('div.stripe_new_card').slideUp( 200 );
+
+		}
+
+	} );
+
 	jQuery(document).on( 'click', '#stripe_payment_button', function(){
 
 		var $form = jQuery("form.checkout, form#order_review");

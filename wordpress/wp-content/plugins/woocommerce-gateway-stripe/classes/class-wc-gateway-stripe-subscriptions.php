@@ -12,11 +12,14 @@ class WC_Gateway_Stripe_Subscriptions extends WC_Gateway_Stripe {
 
 		parent::__construct();
 
-		add_action( 'scheduled_subscription_payment_' . $this->id, array( &$this, 'scheduled_subscription_payment' ), 10, 3 );
+		add_action( 'scheduled_subscription_payment_' . $this->id, array( $this, 'scheduled_subscription_payment' ), 10, 3 );
 
-		add_filter( 'woocommerce_subscriptions_renewal_order_meta_query', array( &$this, 'remove_renewal_order_meta' ), 10, 4 );
+		add_filter( 'woocommerce_subscriptions_renewal_order_meta_query', array( $this, 'remove_renewal_order_meta' ), 10, 4 );
 
-		add_action( 'woocommerce_subscriptions_changed_failing_payment_method_stripe', array( &$this, 'update_failing_payment_method' ), 10, 3 );
+		add_action( 'woocommerce_subscriptions_changed_failing_payment_method_stripe', array( $this, 'update_failing_payment_method' ), 10, 3 );
+
+		// display the current payment method used for a subscription in the "My Subscriptions" table
+		add_filter( 'woocommerce_my_subscriptions_recurring_payment_method', array( $this, 'maybe_render_subscription_payment_method' ), 10, 3 );
 	}
 
 	/**
@@ -286,5 +289,33 @@ class WC_Gateway_Stripe_Subscriptions extends WC_Gateway_Stripe {
 			$woocommerce->add_error( __('Error:', 'wc_stripe') . ' "' . $e->getMessage() . '"' );
 			return;
 		}
+	}
+
+	/**
+	 * Render the payment method used for a subscription in the "My Subscriptions" table
+	 *
+	 * @since 1.7.5
+	 * @param string $payment_method_to_display the default payment method text to display
+	 * @param array $subscription_details the subscription details
+	 * @param WC_Order $order the order containing the subscription
+	 * @return string the subscription payment method
+	 */
+	public function maybe_render_subscription_payment_method( $payment_method_to_display, $subscription_details, WC_Order $order ) {
+
+		// bail for other payment methods
+		if ( $this->id !== $order->recurring_payment_method || ! $order->customer_user )
+			return $payment_method_to_display;
+
+		$stripe_customer = get_post_meta( $order->id, '_stripe_customer_id', true );
+		$customer_ids    = get_user_meta( $order->customer_user, '_stripe_customer_id', false );
+
+		foreach ( $customer_ids as $customer_id ) {
+			if ( $customer_id['customer_id'] == $stripe_customer ) {
+				$payment_method_to_display = sprintf( 'Via card ending in %s', $customer_id['active_card'] );
+				break;
+			}
+		}
+
+		return $payment_method_to_display;
 	}
 }

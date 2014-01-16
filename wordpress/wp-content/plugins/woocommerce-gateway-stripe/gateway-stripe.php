@@ -3,7 +3,7 @@
 Plugin Name: WooCommerce Stripe Gateway
 Plugin URI: http://woothemes.com/woocommerce
 Description: A payment gateway for Stripe (https://stripe.com/). A Stripe account and a server with Curl, SSL support, and a valid SSL certificate is required (for security reasons) for this gateway to function.
-Version: 1.7.3
+Version: 1.7.6
 Author: Mike Jolley
 Author URI: http://mikejolley.com
 
